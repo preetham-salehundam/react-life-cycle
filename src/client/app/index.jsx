@@ -1,26 +1,55 @@
 import React from 'react'
 import {render} from 'react-dom'
+import ListItem from './components/ListItem.jsx'
+import { Route, Link} from 'react-router'
+import {BrowserRouter as Router} from 'react-router-dom'
 
 class TodoList extends React.Component{
     constructor(props){
         super(props);
-        console.log("1 - constructor is invoked")
+       this.editItem = this.editItem.bind(this); 
+       this.remove = this.remove.bind(this);
+       this.state={"todos":["eat","sleep","code"]};
     }
-    componentWillMount(){
-            console.log("2- componentWillMount invoked before render method is called and after constructor is called");
-    }
+   editItem(){
+       var todo = document.getElementById('text').value;
+       const todos = this.state.todos.concat(todo);
+        this.setState({"todos":todos});
+   }
+   remove(item){
+       //console.log(item);
+       //delete this.state.todos;
+       let todos = this.state.todos;
+       let updatedTodos = todos.filter((todo)=>{
+           return todo!=item;
+       })
+       this.setState({"todos":updatedTodos});
+   }
    
     render(){
-        console.log("3- render is invoked after componentWillMount method")
-        return(<ul><li>Test</li></ul>);
+        return(<div>
+            <input type="text" id="text" />
+            <input type="button" onClick={this.editItem} value="add todo" />
+            <ul>{this.state.todos.map((todo,index)=><ListItem key={index} item={todo} removeItem={this.remove}></ListItem>)}</ul>
+        </div>
+        );
     }
-    componentDidMount(){
-        console.log("4- componentDidMount will be invoked after render method")
-    }
-    shouldComponentUpdate(){
-        console.log("5- shouldComponentUpdate returns boolean and render is called if true is returned ")
-        return true;
-    }
+   
 
 } 
-render(<TodoList />,document.getElementById("app"));
+class AppRoutes extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+   return (<Router>
+    <Route path="/" component={TodoList}>
+      <Route path="about" component={TodoList} />
+      <Route path="inbox" component={TodoList}>
+        <Route path="messages/:id" component={TodoList} />
+      </Route>
+    </Route>
+    </Router>)
+    }
+}
+render(<AppRoutes />,document.getElementById("app"));

@@ -99,7 +99,11 @@
 	        value: function remove(item) {
 	            //console.log(item);
 	            //delete this.state.todos;
-	            this.setState(this.state);
+	            var todos = this.state.todos;
+	            var updatedTodos = todos.filter(function (todo) {
+	                return todo != item;
+	            });
+	            this.setState({ "todos": updatedTodos });
 	        }
 	    }, {
 	        key: 'render',
@@ -140,16 +144,7 @@
 	            return _react2.default.createElement(
 	                _reactRouterDom.BrowserRouter,
 	                null,
-	                _react2.default.createElement(
-	                    _reactRouter.Route,
-	                    { path: '/', component: TodoList },
-	                    _react2.default.createElement(_reactRouter.Route, { path: 'about', component: TodoList }),
-	                    _react2.default.createElement(
-	                        _reactRouter.Route,
-	                        { path: 'inbox', component: TodoList },
-	                        _react2.default.createElement(_reactRouter.Route, { path: 'messages/:id', component: TodoList })
-	                    )
-	                )
+	                _react2.default.createElement(_reactRouter.Route, { path: '/', component: TodoList })
 	            );
 	        }
 	    }]);
@@ -22501,8 +22496,11 @@
 	
 	        var _this = _possibleConstructorReturn(this, (ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call(this, props));
 	
-	        console.log("1 - constructor is invoked");
-	        console.log(_this);
+	        console.groupEnd();
+	        //console.log(this.props.item)
+	        console.group(_this.props.item);
+	        console.log(_this.props.item + ": 1 - constructor is invoked");
+	        //console.log(this);
 	        _this.handleRemove = _this.handleRemove.bind(_this);
 	        return _this;
 	    }
@@ -22510,18 +22508,27 @@
 	    _createClass(ListItem, [{
 	        key: "componentWillMount",
 	        value: function componentWillMount() {
-	            console.log("2- componentWillMount invoked before render method is called and after constructor is called");
+	            console.log(this.props.item + ": 2- componentWillMount invoked before render method is called and after constructor is called");
 	        }
 	    }, {
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
-	            console.log("4- componentDidMount will be invoked after render method");
+	            console.group(this.props.item);
+	            console.log(this.props.item + ": 4- componentDidMount will be invoked after render method");
+	            console.groupEnd();
 	        }
 	    }, {
 	        key: "shouldComponentUpdate",
 	        value: function shouldComponentUpdate(nextProps, nextState) {
-	            console.log("6- shouldComponentUpdate returns boolean and render is called if true is returned ");
-	            return true;
+	            console.group(this.props.item);
+	            if (this.props.item == nextProps.item) {
+	                console.log(this.props.item + ": %c6- shouldComponentUpdate returns boolean and render is called if true is returned ", "color:red;font-weight:bold;");
+	                console.groupEnd();
+	            } else {
+	                console.log(this.props.item + ": 6- shouldComponentUpdate returns boolean and render is called if true is returned ");
+	            }
+	
+	            return this.props.item != nextProps.item;
 	        }
 	        /* componentWillUnmount(nextProps,nextState){
 	             console.log("6- component unmounted successfully");
@@ -22530,13 +22537,16 @@
 	    }, {
 	        key: "componentWillUpdate",
 	        value: function componentWillUpdate(nextProps, nextState) {
+	
 	            //Any state changes via this.setState are not allowed as this method should be strictly used to prepare for an upcoming update not trigger an update itself.
-	            console.log("7- componentWillUpdate gets called as soon as the the shouldComponentUpdate returned true.  ");
+	            console.log(this.props.item + ": 7- componentWillUpdate gets called as soon as the the shouldComponentUpdate returned true.  ");
 	        }
 	    }, {
 	        key: "componentDidUpdate",
 	        value: function componentDidUpdate(nextProps, nextState) {
-	            console.log("8-Finally componentDidUpdate is called after the render method.");
+	            console.group(this.props.item);
+	            console.log(this.props.item + ": 8-Finally componentDidUpdate is called after the render method.");
+	            console.groupEnd();
 	        }
 	    }, {
 	        key: "componentWillReceiveProps",
@@ -22547,12 +22557,17 @@
 	             * One interesting thing to remember here is that there is no equivalent method 
 	             * for the state as state changes should never trigger any props changes.
 	             */
-	            console.log("5-componentWillReceiveProps is only called when the props have changed and when this is not an initial rendering. ");
+	            console.group(this.props.item);
+	            console.log(this.props.item + ": 5-componentWillReceiveProps is only called when the props have changed and when this is not an initial rendering. ");
+	            console.groupEnd();
 	        }
 	    }, {
 	        key: "componentWillUnmount",
 	        value: function componentWillUnmount(nextProps, nextState) {
-	            console.log("9- component unmounted successfully");
+	            console.group(this.props.item);
+	            console.log(this.props.item + " 9- component unmounted successfully");
+	            console.groupEnd();
+	            // console.groupEnd();
 	        }
 	    }, {
 	        key: "handleRemove",
@@ -22562,7 +22577,8 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            console.log("3- render is invoked after componentWillMount method");
+	            console.log(this.props.item + ": 3- render is invoked after componentWillMount method");
+	            console.groupEnd();
 	            return _react2.default.createElement(
 	                "li",
 	                null,
